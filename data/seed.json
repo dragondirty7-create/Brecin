@@ -1,0 +1,215 @@
+{
+  "_note": "Starter leads from Soul's build brief (2026-10-11). date_checked = the handoff date, not a fresh check. Every lead needs a freshness check before outreach. Nothing here has been contacted.",
+  "projects": [
+    {
+      "id": "p-magnolia-naranca",
+      "name": "Magnolia + Naranca school renovations",
+      "city": "El Cajon",
+      "kind": "bid",
+      "scope": "School renovations. Framing / rough carpentry packages via three GCs.",
+      "size": null,
+      "deadline": "2026-10-20",
+      "est_value": null,
+      "value_confirmed": false,
+      "value_note": null,
+      "created_at": "2026-10-11T21:00:00-07:00",
+      "routes": [
+        {
+          "id": "r-mag-conan",
+          "contractor": "Conan Construction",
+          "trade_scope": "Rough carpentry",
+          "source_url": "https://compliancenews.com/trade-journal-detail/1/13274",
+          "original_ad_url": "https://compliancenews.com/trade-journal-detail/1/13274",
+          "date_posted": null,
+          "date_checked": "2026-10-11",
+          "how_to_reply": "Call Bree",
+          "contact_name": "Bree",
+          "phone": "(760) 512-1188",
+          "email": "estimating@conanconstruction.com",
+          "verification_note": "Email came from a separate Conan solicitation. Verify it applies to this job before using it.",
+          "bid_status": "Open per listing; recheck"
+        },
+        {
+          "id": "r-mag-grahovac",
+          "contractor": "Grahovac Construction",
+          "trade_scope": "Framing, carpentry, drywall",
+          "source_url": "https://www.compliancenews.com/trade-journal-detail/1/13290",
+          "original_ad_url": "https://www.compliancenews.com/trade-journal-detail/1/13290",
+          "date_posted": null,
+          "date_checked": "2026-10-11",
+          "how_to_reply": "Email Trevor or call the office",
+          "contact_name": "Trevor",
+          "phone": "(619) 466-6693",
+          "email": "trevorb@grahovacconst.com",
+          "verification_note": null,
+          "bid_status": "Open per listing; recheck"
+        },
+        {
+          "id": "r-mag-fordyce",
+          "contractor": "Fordyce Construction",
+          "trade_scope": "Bid plans available; framing package availability unknown",
+          "source_url": "https://www.fordyceconstruction.com/projects/?projid=1995",
+          "original_ad_url": "https://www.fordyceconstruction.com/projects/?projid=1995",
+          "date_posted": null,
+          "date_checked": "2026-10-11",
+          "how_to_reply": "Call the office",
+          "contact_name": null,
+          "phone": "(619) 449-4272",
+          "email": null,
+          "verification_note": "Framing package availability unknown.",
+          "bid_status": "Plans posted; recheck"
+        }
+      ]
+    },
+    {
+      "id": "p-mission-library",
+      "name": "Mission Branch Library restroom renovations",
+      "city": "Oceanside",
+      "kind": "bid",
+      "scope": "Restroom improvements",
+      "size": null,
+      "deadline": "2026-10-19",
+      "est_value": null,
+      "value_confirmed": false,
+      "value_note": "$450K is the whole-project estimate, not a framing contract.",
+      "created_at": "2026-10-11T21:00:01-07:00",
+      "routes": [
+        {
+          "id": "r-mission",
+          "contractor": "Edwin Medina (listing contact)",
+          "trade_scope": null,
+          "source_url": "https://projects.constructconnect.com/details/7715606-mission-branch-library-restroom-improvements%26find_loc%3Dcalifornia-92058",
+          "original_ad_url": null,
+          "date_posted": null,
+          "date_checked": "2026-10-11",
+          "how_to_reply": "Call Edwin Medina",
+          "contact_name": "Edwin Medina",
+          "phone": "(760) 435-5086",
+          "email": null,
+          "verification_note": "Found on an aggregator (ConstructConnect). Original solicitation not confirmed.",
+          "bid_status": "Recheck"
+        }
+      ]
+    },
+    {
+      "id": "p-sunset-view",
+      "name": "Sunset View Elementary modernization",
+      "city": "San Diego",
+      "kind": "bid",
+      "scope": "School modernization",
+      "size": null,
+      "deadline": "2026-10-22",
+      "est_value": null,
+      "value_confirmed": false,
+      "value_note": null,
+      "created_at": "2026-10-11T21:00:02-07:00",
+      "routes": [
+        {
+          "id": "r-sunset-erickson",
+          "contractor": "Erickson-Hall",
+          "trade_scope": "Standalone framing availability UNCONFIRMED",
+          "source_url": "https://ericksonhall.com/bid-center/",
+          "original_ad_url": null,
+          "date_posted": null,
+          "date_checked": "2026-10-11",
+          "how_to_reply": "Email Nick Verdis or the plan room",
+          "contact_name": "Nick Verdis",
+          "phone": null,
+          "email": "nverdis@ericksonhall.com",
+          "verification_note": "Link is the general bid center, not a project-specific page. Plan room: planroom@ericksonhall.com",
+          "bid_status": "Recheck"
+        }
+      ]
+    },
+    {
+      "id": "p-monroe",
+      "name": "Monroe Elementary",
+      "city": "Santa Ana",
+      "kind": "bid",
+      "scope": null,
+      "size": null,
+      "deadline": "2026-11-03",
+      "est_value": null,
+      "value_confirmed": false,
+      "value_note": "Travel willingness UNCONFIRMED.",
+      "created_at": "2026-10-11T21:00:03-07:00",
+      "routes": [
+        {
+          "id": "r-monroe",
+          "contractor": "Listing contact: Heidi Raymond",
+          "trade_scope": null,
+          "source_url": "https://www.compliancenews.com/trade-journal-detail/1/13218",
+          "original_ad_url": "https://www.compliancenews.com/trade-journal-detail/1/13218",
+          "date_posted": null,
+          "date_checked": "2026-10-11",
+          "how_to_reply": "Call Heidi Raymond",
+          "contact_name": "Heidi Raymond",
+          "phone": "(858) 635-7402",
+          "email": null,
+          "verification_note": "Santa Ana is outside San Diego County. Confirm Brendan will travel.",
+          "bid_status": "Recheck"
+        }
+      ]
+    },
+    {
+      "id": "p-res-rancho-bernardo",
+      "name": "Rancho Bernardo remodel",
+      "city": "San Diego (Rancho Bernardo)",
+      "kind": "residential_research",
+      "scope": "Remodel. Research only.",
+      "size": null, "deadline": null, "est_value": null, "value_confirmed": false,
+      "value_note": "Homeowner's original posting not verified. Not contact-ready.",
+      "created_at": "2026-10-11T21:00:04-07:00",
+      "routes": []
+    },
+    {
+      "id": "p-res-bay-park",
+      "name": "Bay Park whole-home remodel",
+      "city": "San Diego (Bay Park)",
+      "kind": "residential_research",
+      "scope": "Whole-home remodel. Research only.",
+      "size": null, "deadline": null, "est_value": null, "value_confirmed": false,
+      "value_note": "Homeowner's original posting not verified. Not contact-ready.",
+      "created_at": "2026-10-11T21:00:05-07:00",
+      "routes": []
+    },
+    {
+      "id": "p-res-garage-adu",
+      "name": "Garage ADU",
+      "city": "San Diego",
+      "kind": "residential_research",
+      "scope": "Garage-to-ADU. Research only.",
+      "size": null, "deadline": null, "est_value": null, "value_confirmed": false,
+      "value_note": "Homeowner's original posting not verified. Not contact-ready.",
+      "created_at": "2026-10-11T21:00:06-07:00",
+      "routes": []
+    },
+    {
+      "id": "p-partner-winkelstein",
+      "name": "Micah Winkelstein, architect",
+      "city": "San Diego",
+      "kind": "partner",
+      "scope": "Potential referral partner. Not an advertised job.",
+      "size": null, "deadline": null, "est_value": null, "value_confirmed": false,
+      "value_note": null,
+      "created_at": "2026-10-11T21:00:07-07:00",
+      "routes": [
+        {
+          "id": "r-winkelstein",
+          "contractor": "Winkelstein Architecture",
+          "trade_scope": null,
+          "source_url": "https://nextdoor.com/pages/micah-winkelstein-architect-san-diego-ca/",
+          "original_ad_url": null,
+          "date_posted": null,
+          "date_checked": "2026-10-11",
+          "how_to_reply": "Partner intro only, with Michael's approval",
+          "contact_name": "Micah Winkelstein",
+          "phone": "(805) 403-5701",
+          "email": "micah@w-arc.com",
+          "verification_note": "Secondary source (Nextdoor). Not a job posting.",
+          "bid_status": null
+        }
+      ]
+    }
+  ]
+}
