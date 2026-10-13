@@ -75,9 +75,37 @@ export default function Board() {
       }
       setPeople(await store.people());
       await reload();
-      unsub = store.subscribe(() => {
-        reload();
-      });
+
+      // Coalesce bursts: one rating fires two change events (lead + history),
+      // and wake-ups can overlap with live events. Run at most one reload at a
+      // time, plus one follow-up so the final state is always fresh.
+      let inFlight = false;
+      let pending = false;
+      const refresh = async () => {
+        if (inFlight) { pending = true; return; }
+        inFlight = true;
+        try {
+          do { pending = false; await reload(); } while (pending);
+        } finally {
+          inFlight = false;
+        }
+      };
+
+      // Catch up when the phone is unlocked, the app is brought back, or the
+      // network returns. Live events missed while asleep are not replayed.
+      const onVisible = () => { if (document.visibilityState === "visible") refresh(); };
+      const onShow = (e: PageTransitionEvent) => { if (e.persisted) refresh(); };
+      document.addEventListener("visibilitychange", onVisible);
+      window.addEventListener("pageshow", onShow);
+      window.addEventListener("online", refresh);
+
+      const unsubLive = store.subscribe(() => { refresh(); });
+      unsub = () => {
+        unsubLive();
+        document.removeEventListener("visibilitychange", onVisible);
+        window.removeEventListener("pageshow", onShow);
+        window.removeEventListener("online", refresh);
+      };
     })();
     return () => unsub();
   }, [reload]);
