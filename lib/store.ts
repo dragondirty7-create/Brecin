@@ -101,13 +101,21 @@ function liveStore(sb: SupabaseClient): Store {
       if (error) throw friendly(error, "Note not saved");
     },
     subscribe(onChange) {
+      // Phones drop the live socket when locked or backgrounded. Changes made
+      // while disconnected are never replayed, so every (re)connect after the
+      // first triggers a catch-up reload.
+      let connectedOnce = false;
       const ch = sb
         .channel("board")
         .on("postgres_changes", { event: "*", schema: "public", table: "projects" }, onChange)
         .on("postgres_changes", { event: "*", schema: "public", table: "routes" }, onChange)
         .on("postgres_changes", { event: "*", schema: "public", table: "notes" }, onChange)
         .on("postgres_changes", { event: "*", schema: "public", table: "events" }, onChange)
-        .subscribe();
+        .subscribe((status) => {
+          if (status !== "SUBSCRIBED") return;
+          if (connectedOnce) onChange();
+          connectedOnce = true;
+        });
       return () => {
         sb.removeChannel(ch);
       };
