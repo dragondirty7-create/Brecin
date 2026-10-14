@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LeadCard from "../components/LeadCard";
+import MikeWorkspaceLink from "../components/MikeWorkspaceLink";
 import SetPassword from "../components/SetPassword";
 import { counts, filterProjects, sortProjects, toCSV, type SortKey, type VerdictFilter } from "../lib/leads";
 import { getStore, SaveError, supabase, type Store } from "../lib/store";
@@ -168,6 +169,7 @@ export default function Board() {
       <header className="top">
         <h1 className="title">Project Presser</h1>
         <p className="motto">Back to the fun</p>
+        {me && mode === "live" && <MikeWorkspaceLink />}
         {me && (
           <p className="stats">
             {c.projects} projects · {c.routes} bid routes · {c.unrated} to rate
