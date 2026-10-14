@@ -167,3 +167,19 @@ html[data-splash="skip"] .launch { display: none; }
 .set-password-form input { min-height: 44px; padding: 8px 12px; border: 2px solid var(--line); border-radius: 10px; min-width: 0; flex: 1 1 180px; }
 .ok-note { color: #1d6b3a; font-size: 0.95rem; }
 .err-note { color: var(--warn); font-size: 0.95rem; }
+
+
+/* Private Mike revenue dashboard. Shares Presser's phone-first design tokens. */
+.mike-nav { display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:18px; font-size:.95rem; }
+.mike-nav [aria-current="page"] { font-weight:800; border-bottom:3px solid var(--accent); }
+.mike-board .tools label { font-weight:700; }
+.mike-board .tools .select { width:100%; }
+.mike-badges { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.mike-facts { display:grid; gap:12px; margin:16px 0 0; }
+.mike-facts > div { min-width:0; }
+.mike-facts dt { color:var(--ink-2); font-size:.9rem; font-weight:700; }
+.mike-facts dd { margin:3px 0 0; overflow-wrap:anywhere; }
+.mike-source { margin-top:14px; }
+.mike-notes { white-space:pre-wrap; overflow-wrap:anywhere; }
+.mike-footer { margin:28px 0; font-size:.9rem; }
+@media (min-width:560px) { .mike-facts { grid-template-columns:1fr 1fr; } }

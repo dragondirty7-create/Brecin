@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/store";
+import { signedInLandingPath } from "../../lib/workspace-route";
 
 /*
  * Sign-in, built for phones:
@@ -42,7 +43,7 @@ function explain(message: string): string {
 
 export default function Login() {
   const sb = supabase();
-  const [method, setMethod] = useState<Method>("code");
+  const [method, setMethod] = useState<Method>("password");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
@@ -55,7 +56,8 @@ export default function Login() {
   useEffect(() => {
     const prefs = read<{ email?: string; method?: Method }>(PREFS);
     if (prefs?.email) setEmail(prefs.email);
-    if (prefs?.method) setMethod(prefs.method);
+    // Password is the new default. An already pending email code still works.
+    if (prefs?.method === "password") setMethod("password");
     const p = read<Pending>(PENDING);
     if (p && Date.now() - p.sentAt < CODE_TTL_MS) { setPending(p); setEmail(p.email); setMethod("code"); }
     else write(PENDING, null);
@@ -67,11 +69,18 @@ export default function Login() {
     return () => clearInterval(t);
   }, [pending]);
 
-  const done = (m: Method) => {
+  async function done(m: Method) {
     write(PENDING, null);
     write(PREFS, { email: email.trim().toLowerCase(), method: m });
-    window.location.replace("/");
-  };
+    if (!sb) return;
+    try {
+      const path = await signedInLandingPath(sb);
+      if (path === "/login") throw new Error("Session not available");
+      window.location.replace(path);
+    } catch {
+      setErr("Signed in, but we couldn\'t verify your workspace. Open Mike\'s Leads directly or try again.");
+    }
+  }
 
   async function sendCode() {
     if (!sb) return;
@@ -100,7 +109,7 @@ export default function Login() {
     }
     setBusy(false);
     if (error || !data.session) { setErr(explain(error?.message ?? "invalid")); return; }
-    done("code");
+    void done("code");
   }
 
   async function signInWithPassword() {
@@ -109,7 +118,7 @@ export default function Login() {
     const { data, error } = await sb.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
     setBusy(false);
     if (error || !data.session) { setErr(explain(error?.message ?? "Invalid login credentials")); return; }
-    done("password");
+    void done("password");
   }
 
   const wait = pending ? Math.max(0, Math.ceil((RESEND_MS - (now - pending.sentAt)) / 1000)) : 0;
@@ -165,7 +174,7 @@ export default function Login() {
             </button>
             {err && <p className="banner" role="alert">{err}</p>}
             {method === "password" && (
-              <p className="hint">No password yet? Sign in with a code once, then tap <strong>Set password</strong> at the top of the board.</p>
+              <p className="hint">No password yet? Sign in with an email code once, open your workspace, then tap <strong>Set password</strong>.</p>
             )}
           </form>
         </>
