@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/store";
+import { signedInLandingPath } from "../../../lib/workspace-route";
 import type { EmailOtpType } from "@supabase/supabase-js";
 
 /*
@@ -31,11 +32,19 @@ export default function Confirm() {
     const sb = supabase();
     if (!sb || !params) return;
     setState("busy");
+    const goToWorkspace = async () => {
+      try {
+        window.location.replace(await signedInLandingPath(sb));
+      } catch {
+        setState("err");
+        setMsg("Signed in, but the workspace could not be verified. Open Mike's Leads directly.");
+      }
+    };
     let { error } = await sb.auth.verifyOtp(params);
     if (error && params.type === "email") ({ error } = await sb.auth.verifyOtp({ ...params, type: "magiclink" }));
     if (error) {
       const { data } = await sb.auth.getSession();
-      if (data.session) { window.location.replace("/"); return; }
+      if (data.session) { await goToWorkspace(); return; }
       setState("err");
       setMsg(/expired|invalid/i.test(error.message)
         ? "This link was already used or has expired. Send a new email from the sign-in screen and use the newest one."
@@ -43,7 +52,7 @@ export default function Confirm() {
       return;
     }
     try { localStorage.removeItem("presser.signin.pending.v1"); } catch { /* storage blocked */ }
-    window.location.replace("/");
+    await goToWorkspace();
   }
 
   return (
