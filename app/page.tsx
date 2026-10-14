@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LeadCard from "../components/LeadCard";
 import MikeWorkspaceLink from "../components/MikeWorkspaceLink";
+import { signedInLandingPath } from "../lib/workspace-route";
 import SetPassword from "../components/SetPassword";
 import { counts, filterProjects, sortProjects, toCSV, type SortKey, type VerdictFilter } from "../lib/leads";
 import { getStore, SaveError, supabase, type Store } from "../lib/store";
@@ -66,6 +67,19 @@ export default function Board() {
         const { data } = await supabase()!.auth.getSession();
         if (!data.session) {
           window.location.replace("/login");
+          return;
+        }
+        // The root route serves Brendan's board only. Resolve the workspace
+        // before loading or drawing any other lead data.
+        try {
+          const landing = await signedInLandingPath(supabase()!);
+          if (landing !== "/") {
+            window.location.replace(landing);
+            return;
+          }
+        } catch {
+          setLoadErr("Unable to check your workspace. No other workspace data was loaded.");
+          setLoading(false);
           return;
         }
       }
