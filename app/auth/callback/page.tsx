@@ -12,6 +12,11 @@ export default function Callback() {
     if (!sb) { setMsg("Sign-in is not configured."); return; }
     const url = new URL(window.location.href);
     const code = url.searchParams.get("code");
+    // Newer email template sends token_hash links; hand those to /auth/confirm.
+    if (url.searchParams.has("token_hash")) {
+      window.location.replace(`/auth/confirm${url.search}`);
+      return;
+    }
     if (url.searchParams.has("error")) {
       setMsg("Supabase could not verify that link. Request a new email.");
       return;
