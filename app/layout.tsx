@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Presser",
-  description: "Presser: private construction lead board for Michael and Brendan. Back to the fun.",
+  title: "Project Presser",
+  description: "Project Presser: private construction lead board for Michael and Brendan. Back to the fun.",
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }, { url: "/icon-192.png", sizes: "192x192", type: "image/png" }],

@@ -13,7 +13,7 @@ export default function Login() {
     <main className="login">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="brand-mark" src="/brand/presser-mark.svg" alt="" width={84} height={192} />
-      <h1 className="title">Presser</h1>
+      <h1 className="title">Project Presser</h1>
       <p className="motto">Back to the fun</p>
       {!sb ? (
         <p className="banner">Not connected to a database yet. Open the home page to see the preview.</p>
