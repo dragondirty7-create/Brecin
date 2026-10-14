@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import SetPassword from "../../components/SetPassword";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "../../lib/store";
 import {
@@ -67,12 +68,22 @@ export default function MikeLeadsPage() {
     <main className="wrap mike-board">
       <header className="top">
         <nav aria-label="Board navigation" className="mike-nav">
-          <Link href="/">Brendan board</Link>
+          <span>Project Presser</span>
           <span aria-current="page">Mike's Leads</span>
         </nav>
         <h1 className="title">Mike's Leads</h1>
         <p className="motto">Back to the fun</p>
         <p className="meta">Private creative gigs and client projects. Research is not outreach.</p>
+        {!loading && !signedOut && !error && (
+          <div className="who">
+            <SetPassword />
+            <button type="button" className="link-btn" onClick={async () => {
+              const sb = supabase();
+              if (sb) await sb.auth.signOut();
+              window.location.replace("/login");
+            }}>Sign out</button>
+          </div>
+        )}
       </header>
 
       {signedOut ? (
@@ -99,7 +110,7 @@ export default function MikeLeadsPage() {
                 </select>
               </div>
               {loading ? <p className="empty" role="status">Loading your leads…</p> :
-                filtered.length === 0 ? <p className="empty">No matching leads. Adjust the search or stage.</p> :
+                filtered.length === 0 ? <p className="empty">No accessible leads match. Check your account or adjust the filters.</p> :
                 <div className="list">
                   {filtered.map((lead) => {
                     const source = safeSourceUrl(lead.source_url);
