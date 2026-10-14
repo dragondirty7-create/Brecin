@@ -56,7 +56,8 @@ export default function Login() {
   useEffect(() => {
     const prefs = read<{ email?: string; method?: Method }>(PREFS);
     if (prefs?.email) setEmail(prefs.email);
-    if (prefs?.method === "password" || prefs?.method === "code") setMethod(prefs.method);
+    // Password is the new default. An already pending email code still works.
+    if (prefs?.method === "password") setMethod("password");
     const p = read<Pending>(PENDING);
     if (p && Date.now() - p.sentAt < CODE_TTL_MS) { setPending(p); setEmail(p.email); setMethod("code"); }
     else write(PENDING, null);
