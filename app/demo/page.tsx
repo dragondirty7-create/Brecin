@@ -2,46 +2,36 @@
 
 import { useEffect, useMemo, useState } from "react";
 import LeadCard from "../../components/LeadCard";
+import seed from "../../data/seed.json";
 import { counts, filterProjects, sortProjects, type VerdictFilter } from "../../lib/leads";
 import type { Note, Profile, Project, Route, Stage, Verdict } from "../../lib/types";
 
-const STORAGE_KEY = "presser-demo-only-v1";
+const STORAGE_KEY = "presser-demo-existing-leads-v2";
 const DEMO_USER: Profile = { id: "demo-brendan", display_name: "Brendan (demo)", role: "reviewer" };
 
-function sampleRoute(id: string, projectId: string, contractor: string, tradeScope: string): Route {
-  return {
-    id, project_id: projectId, contractor, trade_scope: tradeScope,
-    source_url: null, original_ad_url: null, date_posted: null, date_checked: null,
-    how_to_reply: "Demo only. There is no real solicitation.",
-    contact_name: null, phone: null, email: null,
-    verification_note: "SAMPLE DATA — not an actual bid or customer.",
-    bid_status: null, stage: "new", updated_by: null, updated_at: null,
-  };
-}
-
-function sampleProject(
-  id: string, name: string, city: string, scope: string, deadline: string,
-  routes: [string, string][]
-): Project {
-  return {
-    id, name: "SAMPLE — " + name, city, kind: "bid", scope, size: null,
-    deadline, est_value: null, value_confirmed: false,
-    value_note: "Practice lead — not a real job.", verdict: null,
-    verdict_by: null, verdict_at: null, archived: false,
-    created_at: "2026-10-14T12:00:00Z",
-    routes: routes.map(([contractor, tradeScope], i) =>
-      sampleRoute(id + "-route-" + i, id, contractor, tradeScope)),
-  };
-}
-
-const SAMPLE_PROJECTS: Project[] = [
-  sampleProject("sample-a", "Townhome Framing", "San Marcos", "Review framing takeoff and bid route.", "2026-10-23",
-    [["Example GC Alpha", "Wood framing"], ["Example GC Beta", "Rough carpentry"]]),
-  sampleProject("sample-b", "Retail Buildout", "Vista", "Check schedule, crew capacity, and requirements.", "2026-10-27",
-    [["Example GC Gamma", "Interior framing"]]),
-  sampleProject("sample-c", "Home Addition", "Oceanside", "Review scope, drawings, and next steps.", "2026-11-02",
-    [["Example GC Delta", "Addition and structural framing"]]),
-];
+// Use the existing lead list as the test fixture, never the live database.
+// Remove contact information and outside links from this anonymously accessible demo.
+const SAMPLE_PROJECTS: Project[] = seed.projects.map((p) => ({
+  ...p,
+  verdict: null,
+  verdict_by: null,
+  verdict_at: null,
+  archived: false,
+  routes: p.routes.map((r) => ({
+    ...r,
+    project_id: p.id,
+    source_url: null,
+    original_ad_url: null,
+    how_to_reply: "Sign in to the private board for real contact details.",
+    contact_name: null,
+    phone: null,
+    email: null,
+    verification_note: "DEMO — same lead, but private contact details are hidden.",
+    stage: "new" as Stage,
+    updated_by: null,
+    updated_at: null,
+  })),
+})) as unknown as Project[];
 
 type DemoState = { projects: Project[]; notes: Note[] };
 const FILTERS: { id: VerdictFilter; label: string }[] = [
@@ -126,18 +116,18 @@ export default function NoLoginDemo() {
         <span className="badge">NO-LOGIN DEMO</span>
         <h1 className="title">Project Presser</h1>
         <p className="motto">Back to the fun</p>
-        <p className="stats">{stats.projects} sample projects · {stats.unrated} to rate</p>
+        <p className="stats">{stats.projects} existing leads · {stats.unrated} to rate</p>
       </header>
       <p className="banner" role="status">
-        <strong>Practice mode — no account needed.</strong> All projects and contractors here are invented.
-        Ratings, stages, and notes save on this phone only. This is not your real board
+        <strong>Practice mode — no account needed.</strong> These are the existing Presser starter leads, with private contact details hidden.
+        Ratings, stages, and notes save on this phone only. This is not the live shared board
         and changes will not sync to anyone else.
       </p>
-      <p>Brendan: pick a lead, tap GOOD / MAYBE / BAD, change its stage, and add a note.</p>
+      <p>Brendan: try the familiar leads. Tap GOOD / MAYBE / BAD, change a stage, and add a note.</p>
       <div className="tools">
-        <label className="sr" htmlFor="demo-search">Search sample leads</label>
+        <label className="sr" htmlFor="demo-search">Search leads</label>
         <input id="demo-search" className="search" type="search"
-          placeholder="Search sample leads…" value={query}
+          placeholder="Search leads…" value={query}
           onChange={(e) => setQuery(e.target.value)} />
         <div className="chips" role="group" aria-label="Filter sample leads by rating">
           {FILTERS.map((f) => (
@@ -147,7 +137,7 @@ export default function NoLoginDemo() {
         </div>
         <button type="button" className="ghost" onClick={() => {
           setProjects(SAMPLE_PROJECTS); setNotes([]); setQuery(""); setFilter("all");
-          message("Sample leads reset on this phone.");
+          message("Demo ratings and notes reset on this phone.");
         }}>Reset demo</button>
       </div>
       {!ready ? <p className="empty">Loading demo…</p> : visible.length === 0
