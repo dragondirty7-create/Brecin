@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Brendan's Lead Board",
-  description: "Private construction lead board for Michael and Brendan. Back to the fun.",
+  title: "Presser",
+  description: "Presser: private construction lead board for Michael and Brendan. Back to the fun.",
   manifest: "/manifest.webmanifest",
   robots: { index: false, follow: false },
 };

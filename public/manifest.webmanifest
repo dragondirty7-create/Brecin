@@ -1,6 +1,6 @@
 {
-  "name": "Brendan's Lead Board",
-  "short_name": "Lead Board",
+  "name": "Presser",
+  "short_name": "Presser",
   "description": "Back to the fun.",
   "start_url": "/",
   "display": "standalone",

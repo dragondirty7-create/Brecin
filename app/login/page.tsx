@@ -11,7 +11,7 @@ export default function Login() {
 
   return (
     <main className="login">
-      <h1 className="title">Brendan&apos;s Lead Board</h1>
+      <h1 className="title">Presser</h1>
       <p className="motto">Back to the fun</p>
       {!sb ? (
         <p className="banner">Not connected to a database yet. Open the home page to see the preview.</p>

@@ -1,4 +1,6 @@
-# Brecin: Brendan's Lead Board
+# Presser
+
+*Brendan's lead board, formerly "Brecin".*
 
 *Back to the fun.*
 
