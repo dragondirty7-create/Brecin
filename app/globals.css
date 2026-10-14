@@ -129,7 +129,9 @@ dl.facts dd { margin: 0; overflow-wrap: anywhere; }
 
 /* Login */
 .login { max-width: 440px; margin: 0 auto; padding: 32px 16px; }
-.brand-mark { display: block; height: 152px; width: auto; margin: 0 0 14px; }
+.brand-reveal { width: 132px; height: 132px; margin: 0 0 14px; }
+.brand-reveal img, .brand-reveal canvas { display: block; width: 100%; height: 100%; }
+.brand-reveal [hidden] { display: none; }
 .login form { display: grid; gap: 10px; margin-top: 16px; }
 .login input { min-height: var(--tap); padding: 12px 14px; border: 2px solid var(--line); border-radius: var(--radius); background: #fff; }
 
