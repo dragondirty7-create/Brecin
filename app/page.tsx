@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LeadCard from "../components/LeadCard";
+import SetPassword from "../components/SetPassword";
 import { counts, filterProjects, sortProjects, toCSV, type SortKey, type VerdictFilter } from "../lib/leads";
 import { getStore, SaveError, supabase, type Store } from "../lib/store";
 import type { LeadEvent, Note, Profile, Project, Route, Stage, Verdict } from "../lib/types";
@@ -147,6 +148,7 @@ export default function Board() {
         {me && mode === "live" && (
           <div className="who">
             Signed in as {me.display_name} ({me.role === "admin" ? "can edit" : "reviewer"})
+            <SetPassword />
             <button className="link-btn" onClick={async () => { await storeRef.current!.signOut(); window.location.replace("/login"); }}>
               Sign out
             </button>

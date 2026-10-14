@@ -153,4 +153,17 @@ dl.facts dd { margin: 0; overflow-wrap: anywhere; }
 .launch.leaving { opacity: 0; pointer-events: none; }
 .launch canvas { display: block; width: min(92vw, 78vh, 560px); max-width: 100%; height: auto; aspect-ratio: 1 / 1; }
 html[data-splash="skip"] .launch { display: none; }
-@media (prefers-reduced-motion: reduce) { .launch { display: none; } }
+@media (prefers-reduced-motion: reduce) { .launch { transition: none; } }
+
+/* Sign-in (app/login/page.tsx) */
+.segmented { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 18px; padding: 4px; border-radius: 14px; background: var(--line); }
+.segmented button { min-height: 44px; border: 0; border-radius: 10px; background: transparent; font: inherit; font-weight: 600; color: var(--ink); cursor: pointer; }
+.segmented button[aria-selected="true"] { background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.login-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; }
+.link-btn:disabled { color: var(--ink-2); text-decoration: none; cursor: default; }
+.hint { margin: 2px 0 0; color: var(--ink-2); font-size: 0.95rem; }
+.set-password { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.set-password-form { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.set-password-form input { min-height: 44px; padding: 8px 12px; border: 2px solid var(--line); border-radius: 10px; min-width: 0; flex: 1 1 180px; }
+.ok-note { color: #1d6b3a; font-size: 0.95rem; }
+.err-note { color: var(--warn); font-size: 0.95rem; }

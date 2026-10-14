@@ -5,12 +5,13 @@ import { LAUNCH_KEY } from "../lib/launch";
 /**
  * Launch screen: the Project Presser logo reveal plays once when the app opens,
  * then fades into the app. Tap or press any key to skip. Skipped for the rest
- * of the visit, and never shown with reduced motion (see the inline script in
- * app/layout.tsx and the CSS in globals.css, which hide it before first paint).
+ * of the visit (see the inline script in app/layout.tsx, which hides it before
+ * first paint). With reduced motion it shows the finished logo, still, briefly.
  */
 const HOLD_AFTER_STRIKE = 1.2;   // seconds of name + settled logo before fading
 const FADE_MS = 450;
 const NEVER_LONGER_THAN_MS = 6000;
+const STILL_MS = 1100;           // reduced motion: how long the still logo shows
 
 type Reveal = { frame(t: number): void; duration: number; strikeAt: number };
 type RevealGlobal = {
@@ -36,8 +37,9 @@ export default function LaunchSplash() {
   const [gone, setGone] = useState(false);
 
   useEffect(() => {
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (document.documentElement.dataset.splash === "skip" || reduced) {
+    // Reduced motion: show the finished logo, still, for a moment. No fill, no strike, no flash.
+    const reduced = !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (document.documentElement.dataset.splash === "skip") {
       setGone(true);
       return;
     }
@@ -69,6 +71,11 @@ export default function LaunchSplash() {
         const dpr = Math.min(2, window.devicePixelRatio || 1);
         el.width = el.height = Math.round(el.getBoundingClientRect().width * dpr);
         const reveal = api.create(el, { layout: "stage", plain: true });
+        if (reduced) {
+          reveal.frame(reveal.duration);
+          fadeTimer = window.setTimeout(finish, STILL_MS);
+          return;
+        }
         const end = reveal.strikeAt + HOLD_AFTER_STRIKE;
         const t0 = performance.now();
         const tick = (now: number) => {
