@@ -1,4 +1,4 @@
--- Brendan's Lead Board: schema, roles and row-level security.
+-- Project Presser (formerly Brendan's Lead Board): schema, roles and row-level security.
 -- Run once in the Supabase SQL editor (Project > SQL Editor > New query).
 -- The database is the authority on permissions; the UI only mirrors it.
 

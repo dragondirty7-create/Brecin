@@ -11,7 +11,9 @@ export default function Login() {
 
   return (
     <main className="login">
-      <h1 className="title">Brendan&apos;s Lead Board</h1>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="brand-icon" src="/icon.svg" alt="" width={132} height={132} />
+      <h1 className="title">Project Presser</h1>
       <p className="motto">Back to the fun</p>
       {!sb ? (
         <p className="banner">Not connected to a database yet. Open the home page to see the preview.</p>
