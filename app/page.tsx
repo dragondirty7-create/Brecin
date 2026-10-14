@@ -127,7 +127,7 @@ export default function Board() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `lead-board-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `project-presser-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -137,7 +137,7 @@ export default function Board() {
   return (
     <main className="wrap">
       <header className="top">
-        <h1 className="title">Brendan&apos;s Lead Board</h1>
+        <h1 className="title">Project Presser</h1>
         <p className="motto">Back to the fun</p>
         {me && (
           <p className="stats">

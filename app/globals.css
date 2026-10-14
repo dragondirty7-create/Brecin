@@ -129,6 +129,7 @@ dl.facts dd { margin: 0; overflow-wrap: anywhere; }
 
 /* Login */
 .login { max-width: 440px; margin: 0 auto; padding: 32px 16px; }
+.brand-icon { display: block; width: 132px; height: 132px; margin: 0 0 14px; }
 .login form { display: grid; gap: 10px; margin-top: 16px; }
 .login input { min-height: var(--tap); padding: 12px 14px; border: 2px solid var(--line); border-radius: var(--radius); background: #fff; }
 
@@ -139,3 +140,17 @@ dl.facts dd { margin: 0; overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* Launch screen: the logo reveal, once per visit (components/LaunchSplash.tsx) */
+@font-face {
+  font-family: 'Big Shoulders Display'; font-weight: 800; font-display: block;
+  src: url(/brand/big-shoulders-display-800.woff2) format('woff2');
+}
+.launch {
+  position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center;
+  background: #141311; cursor: pointer; transition: opacity 0.45s ease;
+}
+.launch.leaving { opacity: 0; pointer-events: none; }
+.launch canvas { display: block; width: min(92vw, 78vh, 560px); max-width: 100%; height: auto; aspect-ratio: 1 / 1; }
+html[data-splash="skip"] .launch { display: none; }
+@media (prefers-reduced-motion: reduce) { .launch { display: none; } }

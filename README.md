@@ -1,4 +1,6 @@
-# Brecin: Brendan's Lead Board
+# Project Presser
+
+*Brendan's lead board, formerly "Brecin". Home-screen label: "Presser".*
 
 *Back to the fun.*
 
