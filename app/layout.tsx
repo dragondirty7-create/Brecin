@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import LaunchSplash from "../components/LaunchSplash";
+import { LAUNCH_KEY } from "../lib/launch";
 
 export const metadata: Metadata = {
   title: "Project Presser",
@@ -20,8 +22,19 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Before first paint: skip the launch screen if it already played this visit. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem(${JSON.stringify(LAUNCH_KEY)}))document.documentElement.dataset.splash="skip"}catch(e){}`,
+          }}
+        />
+      </head>
+      <body>
+        <LaunchSplash />
+        {children}
+      </body>
     </html>
   );
 }

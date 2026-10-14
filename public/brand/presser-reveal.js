@@ -4,7 +4,7 @@
  * exact same picture for the same t, so the page, the video render and the app
  * all show the same reveal.
  *
- *   const r = PresserReveal.create(canvas, { layout: "stage" | "tile" });
+ *   const r = PresserReveal.create(canvas, { layout: "stage" | "tile", plain?, calm? });
  *   r.play();          // runs once, ends on the final logo
  *   r.frame(t);        // draw any moment (seconds)
  *   r.duration         // seconds
@@ -104,9 +104,11 @@
     function background() {
       if (layout === "stage") {
         ctx.fillStyle = NIGHT; ctx.fillRect(0, 0, W, H);
-        var v = ctx.createRadialGradient(W / 2, H * 0.45, W * 0.1, W / 2, H * 0.45, W * 0.75);
-        v.addColorStop(0, "rgba(255,240,210,0.035)"); v.addColorStop(1, "rgba(0,0,0,0.35)");
-        ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+        if (!opts.plain) {   // plain: no vignette, so the canvas blends into a full-screen stage
+          var v = ctx.createRadialGradient(W / 2, H * 0.45, W * 0.1, W / 2, H * 0.45, W * 0.75);
+          v.addColorStop(0, "rgba(255,240,210,0.035)"); v.addColorStop(1, "rgba(0,0,0,0.35)");
+          ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+        }
       } else {
         ctx.clearRect(0, 0, W, H);
         var r = W * 0.219;   // same corner as the 512px icon (rx 112)
@@ -178,7 +180,8 @@
         var lg = ctx.createRadialGradient(landX, landY, 0, landX, landY, W * 0.12);
         lg.addColorStop(0, "rgba(255,226,160," + 0.55 * I + ")"); lg.addColorStop(1, "rgba(255,226,160,0)");
         ctx.fillStyle = lg; ctx.fillRect(landX - W * 0.12, landY - W * 0.12, W * 0.24, W * 0.24);
-        if (layout === "stage" && !opts.calm) { ctx.fillStyle = "rgba(246,212,143," + 0.07 * flash + ")"; ctx.fillRect(0, 0, W, H); }
+        // sky flash only when the canvas IS the whole stage; full-screen hosts would show its edge
+        if (layout === "stage" && !opts.calm && !opts.plain) { ctx.fillStyle = "rgba(246,212,143," + 0.07 * flash + ")"; ctx.fillRect(0, 0, W, H); }
       }
       ctx.restore();
 

@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { supabase } from "../../lib/store";
-import LogoReveal from "../../components/LogoReveal";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +11,8 @@ export default function Login() {
 
   return (
     <main className="login">
-      <LogoReveal />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="brand-icon" src="/icon.svg" alt="" width={132} height={132} />
       <h1 className="title">Project Presser</h1>
       <p className="motto">Back to the fun</p>
       {!sb ? (
