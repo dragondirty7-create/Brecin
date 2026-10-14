@@ -80,7 +80,7 @@ export default function Login() {
     setBusy(true); setErr("");
     const { error } = await sb.auth.signInWithOtp({
       email: addr,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback`, shouldCreateUser: false },
+      options: { emailRedirectTo: `${window.location.origin}/auth/confirm`, shouldCreateUser: false },
     });
     setBusy(false);
     if (error) { setErr(explain(error.message)); return; }
@@ -126,8 +126,8 @@ export default function Login() {
       ) : pending ? (
         <form onSubmit={(e) => { e.preventDefault(); void verifyCode(); }}>
           <p className="banner" role="status">
-            We emailed a code to <strong>{pending.email}</strong>. Copy it from the newest email and paste it here.
-            It&apos;s fine if this screen reloads while you check your mail.
+            We emailed <strong>{pending.email}</strong>. Easiest: tap the sign-in link in the newest email.
+            Or paste the code from it here. It&apos;s fine if this screen reloads while you check your mail.
           </p>
           <label htmlFor="code">Code from the email</label>
           <input id="code" type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={14}
