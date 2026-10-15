@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import SetPassword from "../../components/SetPassword";
+import MoneyQuest from "../../components/MoneyQuest";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "../../lib/store";
 import {
@@ -15,6 +16,7 @@ export default function MikeLeadsPage() {
   const [error, setError] = useState("");
   const [signedOut, setSignedOut] = useState(false);
   const [query, setQuery] = useState("");
+  const [view, setView] = useState<"quest" | "list">("quest");
   const [stage, setStage] = useState<MikeLeadStatus | "all">("all");
 
   const reload = useCallback(async () => {
@@ -100,6 +102,12 @@ export default function MikeLeadsPage() {
               <p className="stats" aria-live="polite">
                 {loading ? "Loading…" : `${leads.length} saved leads · ${leads.filter((x) => x.lead_status === "research").length} in research`}
               </p>
+              <div className="dq-switch" role="group" aria-label="Choose Mike's view">
+                <button type="button" aria-pressed={view === "quest"} onClick={()=>setView("quest")}>⚔ Money Quest</button>
+                <button type="button" aria-pressed={view === "list"} onClick={()=>setView("list")}>Lead details</button>
+              </div>
+              {view === "quest" && !loading && <MoneyQuest leads={leads} />}
+              {view === "list" && <>
               <div className="tools">
                 <label htmlFor="mike-search">Find a gig</label>
                 <input id="mike-search" className="search" type="search" placeholder="Music, websites, camera setup…" value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -136,6 +144,7 @@ export default function MikeLeadsPage() {
                   })}
                 </div>
               }
+              </>}
               <p className="meta mike-footer">Read-only pilot. No bids, messages, payments or statuses change here. Current listings must be rechecked before contacting buyers.</p>
             </>
           )}
