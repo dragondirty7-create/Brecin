@@ -1,0 +1,31 @@
+name: Antfire Colony offline tests
+
+on:
+  pull_request:
+    paths:
+      - "experiments/colony/**"
+      - ".github/workflows/antfire-colony.yml"
+  push:
+    branches:
+      - "feature/antfire-colony-v0-1"
+    paths:
+      - "experiments/colony/**"
+      - ".github/workflows/antfire-colony.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install offline test dependencies
+        run: python -m pip install -e "./experiments/colony[test]"
+      - name: Run Antfire unit tests
+        working-directory: experiments/colony
+        run: python -m pytest -q
