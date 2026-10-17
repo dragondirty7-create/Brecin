@@ -198,3 +198,7 @@ do $$ begin
   begin alter publication supabase_realtime add table public.notes;    exception when others then null; end;
   begin alter publication supabase_realtime add table public.events;   exception when others then null; end;
 end $$;
+
+-- ---------- Added 2026-10-17 ----------
+-- Job debriefs and voice notes live in supabase/migrations/2026-10-17_debriefs_and_voice_notes.sql.
+-- New installs: run that file right after this one.

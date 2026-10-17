@@ -67,6 +67,23 @@ Sign in with the emailed link on your phone.
 ### 5. Put it on your phones (needs Michael's OK)
 Import the repo into Vercel and add the same two environment variables. Then add the Vercel URL to Supabase's Site URL and Redirect URLs. On each phone, open it and choose **Add to Home Screen**.
 
+## Job debriefs and voice notes (added 2026-10-17)
+
+**Debriefs.** When a bid route is set to **Won** or **Lost**, a short interview appears on that card for each person: was our lead info right, why did it go that way (tap all that fit), do we want more jobs like this, what the job was really worth (Won only), and a free-text "anything the agents should know?". Every question is optional, but at least one must be answered. "Later" hides it until the next visit. You can edit your own debrief; nobody can delete one.
+
+**What the agents read.** Michael's **Agent briefing** button (in Sort & filter) downloads a short markdown file: counts at the top, then one block per finished job. Drop it in Drive for Soul, Midas and Claude. The same data is in the `agent_briefing` view in Supabase.
+
+**Voice notes.** Three places:
+- 🎙 **Record a test session** (top of the board): record someone trying the app while they think out loud. Up to 30 minutes, with a title like "Brendan, rating 5 leads".
+- **Record voice note** inside any card's Details (up to 3 minutes).
+- **Rather say it out loud?** inside a debrief.
+
+You listen back before saving, and nothing uploads until you tap **Save recording**. It can't be saved unless the consent box is ticked ("everyone being recorded knows and said OK"; California needs everyone's consent). Audio goes to a **private** Supabase Storage bucket. Only board members can play it, through a link that expires after an hour. The person who recorded it, or Michael, can delete it. Recordings are not transcribed yet.
+
+**To turn it on:** after `schema.sql`, run `supabase/migrations/2026-10-17_debriefs_and_voice_notes.sql` once in the SQL Editor. Until then the board works as before, and debrief and voice saves show an error.
+
+The no-login demo (`/demo`) has both features too. There, debriefs save on the phone only, and recordings stay in the tab and are never uploaded.
+
 ## Preview mode
 
 With no Supabase keys set, the app shows the starter leads with a banner that says nothing is saved. Every tap returns "Not saved". It's for checking the layout and never pretends to save.
@@ -74,7 +91,7 @@ With no Supabase keys set, the app shows the starter leads with a banner that sa
 ## Checks
 
 ```bash
-npm test           # 26 unit tests: provenance, permissions, one-project value, filters, CSV safety
+npm test           # 35 unit tests: provenance, permissions, one-project value, filters, CSV safety, debriefs, agent briefing, recorder helpers
 npm run build      # type-check + production build
 ```
 
