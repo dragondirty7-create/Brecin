@@ -167,3 +167,41 @@ html[data-splash="skip"] .launch { display: none; }
 .set-password-form input { min-height: 44px; padding: 8px 12px; border: 2px solid var(--line); border-radius: 10px; min-width: 0; flex: 1 1 180px; }
 .ok-note { color: #1d6b3a; font-size: 0.95rem; }
 .err-note { color: var(--warn); font-size: 0.95rem; }
+
+/* ---------- Job debriefs + voice notes (2026-10-17) ---------- */
+.debrief { display: grid; gap: 10px; margin-top: 14px; padding: 14px; border: 2px solid var(--accent); border-radius: var(--radius); background: #eef4fa; }
+.debrief h3 { margin: 0; font-size: 1.1rem; }
+.debrief .meta { margin: 0; }
+.debrief fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.debrief legend { font-weight: 700; padding: 0; margin-bottom: 6px; }
+.debrief .segmented { grid-template-columns: repeat(3, 1fr); margin-top: 0; }
+.debrief .segmented button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.debrief .chips { margin: 0; }
+.debrief label { font-weight: 700; }
+.debrief textarea { width: 100%; min-height: 76px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 12px; background: #fff; resize: vertical; }
+.debrief .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.debrief-done { margin-top: 8px; }
+details.voice-answer > summary { cursor: pointer; font-weight: 700; color: var(--accent); min-height: 44px; display: flex; align-items: center; }
+
+.voice { display: grid; gap: 8px; margin-top: 10px; }
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 0.95rem; }
+.consent input { width: 22px; height: 22px; margin-top: 1px; flex: none; }
+.rec-btn { min-height: var(--tap); display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 2px solid var(--bad); border-radius: 12px; background: var(--card); color: var(--bad); font-weight: 700; cursor: pointer; padding: 10px 16px; }
+.rec-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--bad); display: inline-block; flex: none; }
+.rec-dot.on { animation: rec-pulse 1.2s ease-in-out infinite; }
+@keyframes rec-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .rec-dot.on { animation: none; } }
+.rec-live { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border-radius: 12px; background: var(--bad-bg); }
+.rec-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+.rec-limit { font-size: 0.85rem; color: var(--ink-2); flex: 1; }
+.rec-review { display: grid; gap: 8px; }
+.rec-review audio, .voice-list audio { width: 100%; }
+.rec-review .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.voice-list { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.voice-list li { padding: 10px 12px; border-radius: 10px; background: #f3f0e8; display: grid; gap: 6px; overflow-wrap: anywhere; }
+.voice-list .who-when { font-size: 0.85rem; color: var(--ink-2); }
+.voice-label { font-weight: 600; }
+
+details.test-session { margin: 4px 0 12px; padding: 10px 14px; border: 2px solid var(--line); border-radius: var(--radius); background: var(--card); }
+details.test-session > summary { cursor: pointer; font-weight: 700; min-height: 44px; display: flex; align-items: center; }
+details.test-session .meta { margin: 4px 0 0; }
