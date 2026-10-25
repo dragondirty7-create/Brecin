@@ -81,3 +81,44 @@ export interface Profile {
   display_name: string;
   role: Role;
 }
+
+/* ---------- Job debriefs (2026-10-17) ---------- */
+
+export type Outcome = "won" | "lost";
+export type LeadAccuracy = "right" | "partly" | "wrong";
+export type Reason = "price" | "timing" | "relationship" | "scope_fit" | "no_response" | "paperwork" | "distance" | "other";
+export type MoreLikeThis = "more" | "same" | "fewer";
+
+/** A short interview after a bid route ends, so people and agents learn from it. */
+export interface Debrief {
+  id: string;
+  project_id: string;
+  route_id: string;
+  author: string;
+  outcome: Outcome;
+  lead_accuracy: LeadAccuracy | null;
+  reasons: Reason[];
+  more_like_this: MoreLikeThis | null;
+  real_value: number | null;
+  for_agents: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type DebriefInput = Pick<Debrief, "outcome" | "lead_accuracy" | "reasons" | "more_like_this" | "real_value" | "for_agents">;
+
+export type VoiceKind = "note" | "debrief" | "test";
+
+export interface VoiceNote {
+  id: string;
+  project_id: string | null;
+  route_id: string | null;
+  kind: VoiceKind;
+  label: string | null;
+  path: string;
+  mime: string;
+  duration_s: number;
+  consent: boolean;
+  author: string;
+  created_at: string;
+}

@@ -1,10 +1,13 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import LeadCard from "../components/LeadCard";
+import LeadCard, { type Clip } from "../components/LeadCard";
 import SetPassword from "../components/SetPassword";
+import VoiceList from "../components/VoiceList";
+import VoiceRecorder from "../components/VoiceRecorder";
+import { agentBriefing } from "../lib/debrief";
 import { counts, filterProjects, sortProjects, toCSV, type SortKey, type VerdictFilter } from "../lib/leads";
 import { getStore, SaveError, supabase, type Store } from "../lib/store";
-import type { LeadEvent, Note, Profile, Project, Route, Stage, Verdict } from "../lib/types";
+import type { Debrief, DebriefInput, LeadEvent, Note, Profile, Project, Route, Stage, Verdict, VoiceKind, VoiceNote } from "../lib/types";
 import { STAGES } from "../lib/types";
 
 type Toast = { kind: "ok" | "err" | "busy"; text: string } | null;
@@ -24,6 +27,8 @@ export default function Board() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
   const [events, setEvents] = useState<LeadEvent[]>([]);
+  const [debriefs, setDebriefs] = useState<Debrief[]>([]);
+  const [voice, setVoice] = useState<VoiceNote[]>([]);
   const [loadErr, setLoadErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
@@ -48,6 +53,8 @@ export default function Board() {
       setProjects(data.projects);
       setNotes(data.notes);
       setEvents(data.events);
+      setDebriefs(data.debriefs);
+      setVoice(data.voice);
       setLoadErr(null);
     } catch (e) {
       setLoadErr(e instanceof Error ? e.message : "Couldn't load leads.");
@@ -144,6 +151,39 @@ export default function Board() {
   const onNote = (p: Project, body: string) => save(`note:${p.id}`, "Note saved.", () => storeRef.current!.addNote(p.id, body));
   const onArchive = (p: Project, a: boolean) =>
     save(`archive:${p.id}`, a ? "Archived." : "Restored.", () => storeRef.current!.setArchived(p.id, a));
+  const onDebrief = (p: Project, r: Route, d: DebriefInput) =>
+    save(`debrief:${r.id}`, "Debrief saved. The agents will see it.", () => storeRef.current!.saveDebrief(p.id, r.id, d));
+  const onVoice = (p: Project | null, r: Route | null, kind: VoiceKind, c: Clip) =>
+    save(`voice:${p?.id ?? "test"}`, "Recording saved.", () =>
+      storeRef.current!.saveVoice({
+        blob: c.blob,
+        mime: c.mime,
+        duration_s: c.duration_s,
+        consent: c.consent,
+        kind,
+        project_id: p?.id ?? null,
+        route_id: r?.id ?? null,
+        label: c.label ?? null,
+      })
+    );
+  const voiceUrl = (path: string) => storeRef.current!.voiceUrl(path);
+  const onDeleteVoice = (v: VoiceNote) => {
+    if (!window.confirm("Delete this recording for everyone?")) return;
+    save(`voice-del:${v.id}`, "Recording deleted.", () => storeRef.current!.deleteVoice(v));
+  };
+
+  function exportBriefing() {
+    const counts: Record<string, number> = {};
+    for (const v of voice) if (v.kind === "debrief" && v.route_id) counts[v.route_id] = (counts[v.route_id] ?? 0) + 1;
+    const md = agentBriefing(projects, debriefs, people, counts);
+    const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `presser-agent-briefing-${new Date().toISOString().slice(0, 10)}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   const visible = useMemo(
     () => sortProjects(filterProjects(projects, { q, verdict, stage, showArchived: archived }), sort),
@@ -241,9 +281,21 @@ export default function Board() {
               {me.role === "admin" && (
                 <button className="ghost" onClick={exportCSV}>Export CSV</button>
               )}
+              {me.role === "admin" && (
+                <button className="ghost" onClick={exportBriefing}>Agent briefing</button>
+              )}
             </div>
             </details>
           </div>
+
+          <details className="test-session">
+            <summary>🎙 Record a test session{voice.some((v) => v.kind === "test") ? ` (${voice.filter((v) => v.kind === "test").length})` : ""}</summary>
+            <p className="meta">
+              Record someone trying the app while they think out loud. Tell them first; it won&apos;t save without their OK. Up to 30 minutes.
+            </p>
+            <VoiceRecorder kind="test" startLabel="Start recording" askLabel onSave={(c) => onVoice(null, null, "test", c)} />
+            <VoiceList items={voice.filter((v) => v.kind === "test")} people={people} me={me} getUrl={voiceUrl} onDelete={onDeleteVoice} />
+          </details>
 
           {loading ? (
             <p className="empty">Loading leads…</p>
@@ -264,6 +316,13 @@ export default function Board() {
                   onStage={onStage}
                   onNote={onNote}
                   onArchive={onArchive}
+                  me={me}
+                  debriefs={debriefs.filter((d) => d.project_id === p.id)}
+                  voice={voice.filter((v) => v.project_id === p.id)}
+                  onDebrief={onDebrief}
+                  onVoice={onVoice}
+                  voiceUrl={voiceUrl}
+                  onDeleteVoice={onDeleteVoice}
                 />
               ))}
             </div>

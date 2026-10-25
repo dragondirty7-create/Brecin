@@ -1,8 +1,14 @@
 "use client";
 import { useState } from "react";
-import type { LeadEvent, Note, Profile, Project, Route, Stage, Verdict } from "../lib/types";
+import type { Debrief, DebriefInput, LeadEvent, Note, Profile, Project, Route, Stage, Verdict, VoiceKind, VoiceNote } from "../lib/types";
 import { STAGES } from "../lib/types";
 import { can, daysUntil, deadlineLabel, displayValue, linkState, mailHref, telHref } from "../lib/leads";
+import { ACCURACY, isDone, MORE, needsDebrief } from "../lib/debrief";
+import DebriefForm from "./DebriefForm";
+import VoiceList from "./VoiceList";
+import VoiceRecorder from "./VoiceRecorder";
+
+export type Clip = { blob: Blob; mime: string; duration_s: number; consent: boolean; label?: string | null };
 
 const VERDICTS: { id: Verdict; label: string }[] = [
   { id: "good", label: "GOOD" },
@@ -32,10 +38,40 @@ interface Props {
   onStage: (r: Route, s: Stage) => void;
   onNote: (p: Project, body: string) => Promise<boolean>;
   onArchive: (p: Project, archived: boolean) => void;
+  /* Debriefs and voice notes (optional so the demo page can leave them out). */
+  me?: Profile | null;
+  debriefs?: Debrief[];
+  voice?: VoiceNote[];
+  onDebrief?: (p: Project, r: Route, d: DebriefInput) => Promise<boolean>;
+  onVoice?: (p: Project, r: Route | null, kind: VoiceKind, clip: Clip) => Promise<boolean>;
+  voiceUrl?: (path: string) => Promise<string>;
+  onDeleteVoice?: (v: VoiceNote) => void;
 }
 
-export default function LeadCard({ project: p, notes, events, people, role, busy, onVerdict, onStage, onNote, onArchive }: Props) {
+export default function LeadCard({
+  project: p,
+  notes,
+  events,
+  people,
+  role,
+  busy,
+  onVerdict,
+  onStage,
+  onNote,
+  onArchive,
+  me = null,
+  debriefs = [],
+  voice = [],
+  onDebrief,
+  onVoice,
+  voiceUrl,
+  onDeleteVoice,
+}: Props) {
   const [draft, setDraft] = useState("");
+  const [later, setLater] = useState<string[]>([]);
+  const [editing, setEditing] = useState<string | null>(null);
+  const due = onDebrief ? needsDebrief(p, debriefs, me?.id ?? null).filter((r) => !later.includes(r.id)) : [];
+  const done = p.routes.filter((r) => isDone(r.stage) && debriefs.some((d) => d.route_id === r.id));
   const name = (id: string | null) => (id && people[id]?.display_name) || "Someone";
   const days = daysUntil(p.deadline);
   const value = displayValue(p);
@@ -96,9 +132,59 @@ export default function LeadCard({ project: p, notes, events, people, role, busy
       )}
       {p.kind === "bid" && <p className="fresh">Confirm it&apos;s still open before calling.</p>}
 
+      {onDebrief &&
+        due.map((r) => (
+          <DebriefForm
+            key={r.id}
+            project={p}
+            route={r}
+            outcome={r.stage as "won" | "lost"}
+            onSave={(d) => onDebrief(p, r, d)}
+            onVoice={onVoice ? (c) => onVoice(p, r, "debrief", c) : undefined}
+            onCancel={() => setLater((l) => [...l, r.id])}
+          />
+        ))}
+
+      {done.map((r) => {
+        const mine = debriefs.find((d) => d.route_id === r.id && d.author === me?.id);
+        return (
+          <div className="debrief-done" key={r.id}>
+            {debriefs
+              .filter((d) => d.route_id === r.id)
+              .map((d) => (
+                <p key={d.id} className="byline">
+                  ✓ Debrief: {r.contractor} {d.outcome.toUpperCase()} · {name(d.author)} · lead info {ACCURACY.find((a) => a.id === d.lead_accuracy)?.label.toLowerCase() ?? "not rated"}
+                  {d.more_like_this ? ` · ${MORE.find((m) => m.id === d.more_like_this)?.label.toLowerCase()}` : ""}
+                  {d.for_agents ? ` · “${d.for_agents.length > 90 ? d.for_agents.slice(0, 89) + "…" : d.for_agents}”` : ""}
+                </p>
+              ))}
+            {mine && onDebrief && isDone(r.stage) && (
+              editing === r.id ? (
+                <DebriefForm
+                  project={p}
+                  route={r}
+                  outcome={r.stage as "won" | "lost"}
+                  existing={mine}
+                  onSave={async (d) => {
+                    const ok = await onDebrief(p, r, d);
+                    if (ok) setEditing(null);
+                    return ok;
+                  }}
+                  onCancel={() => setEditing(null)}
+                />
+              ) : (
+                <button type="button" className="link-btn" onClick={() => setEditing(r.id)}>
+                  Edit my debrief
+                </button>
+              )
+            )}
+          </div>
+        );
+      })}
+
       <details className="more">
         <summary>
-          Details &amp; notes{notes.length ? ` (${notes.length})` : ""}
+          Details &amp; notes{notes.length + voice.length ? ` (${notes.length + voice.length})` : ""}
         </summary>
 
         {p.routes.map((r) => (
@@ -163,6 +249,12 @@ export default function LeadCard({ project: p, notes, events, people, role, busy
               )
             )}
         </ul>
+
+        {voiceUrl && <VoiceList items={voice} people={people} me={me} getUrl={voiceUrl} onDelete={onDeleteVoice} />}
+
+        {can.addNote(role) && onVoice && (
+          <VoiceRecorder kind="note" onSave={(c) => onVoice(p, null, "note", c)} />
+        )}
 
         {can.addNote(role) && (
           <form
