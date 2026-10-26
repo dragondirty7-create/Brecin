@@ -34,8 +34,11 @@ export default function Confirm() {
     let { error } = await sb.auth.verifyOtp(params);
     if (error && params.type === "email") ({ error } = await sb.auth.verifyOtp({ ...params, type: "magiclink" }));
     if (error) {
-      const { data } = await sb.auth.getSession();
-      if (data.session) { window.location.replace("/"); return; }
+      // A previously signed-in account must not hide a failed recovery-link verification.
+      if (params.type !== "recovery") {
+        const { data } = await sb.auth.getSession();
+        if (data.session) { window.location.replace("/"); return; }
+      }
       setState("err");
       setMsg(/expired|invalid/i.test(error.message)
         ? "This link was already used or has expired. Send a new email from the sign-in screen and use the newest one."
@@ -43,7 +46,7 @@ export default function Confirm() {
       return;
     }
     try { localStorage.removeItem("presser.signin.pending.v1"); } catch { /* storage blocked */ }
-    window.location.replace("/");
+    window.location.replace(params.type === "recovery" ? "/auth/reset-password" : "/");
   }
 
   return (
