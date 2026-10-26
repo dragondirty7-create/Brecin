@@ -167,3 +167,11 @@ html[data-splash="skip"] .launch { display: none; }
 .set-password-form input { min-height: 44px; padding: 8px 12px; border: 2px solid var(--line); border-radius: 10px; min-width: 0; flex: 1 1 180px; }
 .ok-note { color: #1d6b3a; font-size: 0.95rem; }
 .err-note { color: var(--warn); font-size: 0.95rem; }
+
+/* One-field password visibility control and a clean recovery flow. */
+.login .password-field { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.login .password-field > input { width: 100%; min-width: 0; }
+.login .password-field > button { min-height: var(--tap); }
+.login .login-demo { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+.login .link-btn { text-align: left; }
+.login .primary { width: 100%; }
